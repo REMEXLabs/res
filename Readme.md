@@ -1,3 +1,3 @@
-# resserver-client
+# res
 
-A ajax client to query and retrieve data from an OpenURC resource server.
+An ajax client to query and retrieve data from an OpenURC resource server.

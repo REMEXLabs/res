@@ -3,7 +3,7 @@
 (function($) {
   "use strict";
 
-  $.resserver = function() {
+  $.res = function() {
     return;
   };
 

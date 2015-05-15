@@ -3,12 +3,12 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 
 gulp.task('default', function() {
-  return gulp.src('resserver-client.js')
+  return gulp.src('jquery.res.js')
     .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
     .pipe(gulp.dest('./'));
 });
 
 gulp.task('watch', function(){
-  gulp.watch('resserver-client.js', ['default']);
+  gulp.watch('jquery.res.js', ['default']);
 });

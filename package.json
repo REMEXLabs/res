@@ -1,8 +1,8 @@
 {
-  "name": "resserver-client",
+  "name": "res",
   "version": "1.0.0",
-  "description": "AJAX-client for requesting resources from a resource server",
-  "main": "resserver-client.js",
+  "description": "AJAX-client for requesting resources from an URC resource server",
+  "main": "res.js",
   "directories": {
     "test": "tests"
   },
@@ -26,6 +26,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/AlexVonB/resserver-client.git"
+    "url": "https://github.com/AlexVonB/res.git"
   }
 }
