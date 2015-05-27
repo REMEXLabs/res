@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testbench</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="../jquery.res.js"></script>
+</head>
+<body>
+    <script>
+    /* global $, console */
+    "use strict";
+    var $res = $.res("https://res.openurc.org/");
+    $res.query('<query xmlns="http://www.w3.org/1999/xhtml"><prop name="http://openurc.org/ns/res#type" val="http://openurc.org/restypes#video"></prop><prop name="http://openurc.org/ns/res#subtype" val="http://openurc.org/restypes#signLanguageVideo"></prop><prop name="http://purl.org/dc/elements/1.1/title" val="GSG video explaining the account number input field (human Feldmann)"></prop></query>')
+        .done(function(xml){
+            xml.find("response").each(function(){
+                console.log($(this).find("globalAt").first().text());
+            });
+            console.log("done");
+        })
+        .fail(function(xhr, status, error){
+            console.log(status);
+            console.log(error);
+        });
+    </script>
+</body>
+</html>
+
