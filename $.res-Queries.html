@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Class: Ref</title>
+    <title>Class: Queries</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -139,7 +139,7 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="$.res-Ref.html">Class: Ref</h1>
+        <h1 class="page-title" data-filename="$.res-Queries.html">Class: Queries</h1>
         
 
 
@@ -150,7 +150,7 @@
     <h2>
         <span class="ancestors"><a href="$.res.html">.res</a>~</span>
     
-    Ref
+    Queries
     </h2>
     
 </header>  
@@ -163,14 +163,14 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="Ref">
+        <h4 class="name" id="Queries">
             
-            new Ref<span class="signature">(ref)</span>
+            new Queries<span class="signature">()</span>
         </h4>
     
         
         <div class="tag-source">
-            c:/xampp/htdocs/res-api/jquery.res.js, line 251
+            c:/xampp/htdocs/res-api/jquery.res.js, line 33
         </div>
         
     </div>
@@ -181,7 +181,8 @@
     
     
     <div class="description">
-        <p>A Query that is a reference to an earlier query</p>
+        <p>Queries factory, able to generate child <a href="$.res-Query.html">$.res~Query</a>s and
+<a href="$.res-Ref.html">$.res~Ref</a>s</p>
     </div>
     
 
@@ -189,52 +190,6 @@
     
     
     
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>ref</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                <p>Query reference identifier that had been assigned by
-the server in a previous response</p></td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -298,14 +253,14 @@ the server in a previous response</p></td>
             
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="toXML">
+        <h4 class="name" id="addQuery">
             
-            toXML<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{XMLDoc}</span>
+            addQuery<span class="signature">(options)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.res-Query.html">$.res~Query</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            c:/xampp/htdocs/res-api/jquery.res.js, line 259
+            c:/xampp/htdocs/res-api/jquery.res.js, line 43
         </div>
         
     </div>
@@ -316,7 +271,258 @@ the server in a previous response</p></td>
     
     
     <div class="description">
-        <p>Creates a XML-Document representing this query</p>
+        <p>Adds a <a href="$.res-Query.html">$.res~Query</a> to this batch of queries</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>See <a href="$.res-Query.html">$.res~Query</a></p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+<h5>Returns:</h5>
+<a href="$.res-Query.html">$.res~Query</a> that can be modified. Use
+<a href="$.res-Query.html#complete">$.res~Query#complete</a> to return the parent <a href="$.res-Queries.html">$.res~Queries</a>
+<br />
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="addRef">
+            
+            addRef<span class="signature">(options)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.res-Queries.html">$.res~Queries</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            c:/xampp/htdocs/res-api/jquery.res.js, line 54
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Adds a <a href="$.res-Ref.html">$.res~Ref</a> to this batch of queries</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>See <a href="$.res-Ref.html">$.res~Ref</a></p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+<h5>Returns:</h5>
+this <a href="$.res-Queries.html">$.res~Queries</a>
+<br />
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="send">
+            
+            send<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{jQuery.Deferred}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            c:/xampp/htdocs/res-api/jquery.res.js, line 77
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Send the queries to the resource server</p>
     </div>
     
 
@@ -366,7 +572,87 @@ the server in a previous response</p></td>
 
 
 <h5>Returns:</h5>
-XML-Document
+Promise (see <a href="https://api.jquery.com/category/deferred-object/">https://api.jquery.com/category/deferred-object/</a>)
+<br />
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="toXMLString">
+            
+            toXMLString<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{string}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            c:/xampp/htdocs/res-api/jquery.res.js, line 63
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a XML-Document representing these queries</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+<h5>Returns:</h5>
+XML-Document as string
 <br />
 
     
