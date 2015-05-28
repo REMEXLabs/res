@@ -4,7 +4,8 @@
     },
     "opts": {
         "template": "node_modules/jaguarjs-jsdoc",
-        "destination": "docs"
+        "destination": "docs",
+        "readme": "Readme.md"
     },
     "plugins": [
         "plugins/markdown"
