@@ -8,7 +8,7 @@
    * Initiate a connection to a resource server
    * @param  {string} url     The server's URL. https recommended.
    * @param  {object} options The connection's options
-   * @return {TODO} TODOblabla
+   * @returns {RES} A Resource Server Object
    * @constructor
    */
   $.res = function(url, options) {
@@ -26,6 +26,86 @@
     var settings = $.extend({}, defaults, options);
 
     /**
+     * Queries factory, able to generate child {@link $.res~Query}s and
+     * {@link $.res~Ref}s
+     * @constructor
+     */
+    function Queries() {
+      this.queries = [];
+    }
+
+    /**
+     * Adds a {@link $.res~Query} to this batch of queries
+     * @param {object} options See {@link $.res~Query}
+     * @returns {$.res~Query} The {@link $.res~Query} that can be modified. Use
+     * {@link $.res~Query#complete} to return the parent {@link $.res~Queries}
+     */
+    Queries.prototype.addQuery = function(options) {
+      var q = new Query(options, this);
+      this.queries.push(q);
+      return q;
+    };
+
+    /**
+     * Adds a {@link $.res~Ref} to this batch of queries
+     * @param {object} options See {@link $.res~Ref}
+     * @returns {$.res~Queries} Returns this {@link $.res~Queries}
+     */
+    Queries.prototype.addRef = function(ref) {
+      this.queries.push(new Ref(ref));
+      return this;
+    };
+
+    /**
+     * Creates a XML-Document representing these queries
+     * @returns {string} The XML-Document as string
+     */
+    Queries.prototype.toXMLString = function() {
+      var $queries = $('<queries>');
+      for (var i = 0; i < this.queries.length; i++) {
+        $queries.append(this.queries[i].toXML());
+      }
+      var xmlString = (new XMLSerializer()).serializeToString($queries[0]);
+      // Workaround, the server allows only exactly '<queries>'...
+      return xmlString.replace(' xmlns="http://www.w3.org/1999/xhtml"', '');
+    };
+
+    /**
+     * Send the queries to the resource server
+     * @returns {jQuery.Deferred} A Promise (see {@link https://api.jquery.com/category/deferred-object/})
+     */
+    Queries.prototype.send = function() {
+      var $deferred = $.Deferred();
+      var data = this.toXMLString();
+      console.log(data);
+
+      $.ajax({
+        url: url + 'query',
+        contentType: 'text/xml', // datatype of data sent
+        crossDomain: true, // tell jQuery CORS is ok
+        data: data, // send plain xml data
+        dataType: 'xml', // expected datatype of the response
+        /*
+         * Since GET is 'a simplified request type' and would not support:
+         * - specifing a property descriptor,
+         * - specifing the first index or
+         * - specifing the number of returned elements in the resource list,
+         * this library supports only POST requests.
+         */
+        method: 'POST',
+        password: settings.password,
+        processData: false, // dont convert the xml data sent
+        username: settings.username
+      }).done(function(data){
+        $deferred.resolve($(data));
+      }).fail(function(xhr, status, error){
+        $deferred.reject(xhr, status, error);
+      });
+
+      return $deferred;
+    };
+
+    /**
     * Describes a query that can be sent to a resserver
     *
     * @param {object} options Options, contains start and/or count of a query
@@ -36,13 +116,23 @@
     *
     * @constructor
     */
-    function Query(options) {
+    function Query(options, parent) {
+      this._parent = parent || null;
       this.start = options.start || null;
       this.count = options.count || null;
       this.usercontext = [];
       this.controllercontext = [];
       this.props = [];
     }
+
+    /**
+     * Return to the parent {@link $.res~Queries} object, i.e. in order to add
+     * another {@link $.res~Query}.
+     * @returns {$.res~Queries} The Parent {@link $.res~Queries}
+     */
+    Query.prototype.complete = function() {
+      return this._parent;
+    };
 
     /**
      * Add a user preference
@@ -95,9 +185,9 @@
 
     /**
      * Creates a XML-Document representing this query
-     * @return {string} The XML-Document as a string
+     * @returns {XMLDoc} The XML-Document
      */
-    Query.prototype.toXMLString = function() {
+    Query.prototype.toXML = function() {
       var $query = $('<query></query>');
 
       if (this.start !== null) {
@@ -112,7 +202,7 @@
       if (this.usercontext.length > 0) {
         var $ctx = $('<usercontext></usercontext>');
         for (var i = 0; i < this.usercontext.length; i++) {
-          var $prop = $('<prop />')
+          var $prop = $('<prop>')
             .attr('name', this.usercontext[i].name)
             .attr('val', this.usercontext[i].value);
           $ctx.append($prop);
@@ -148,7 +238,7 @@
         }
       }
 
-      return (new XMLSerializer()).serializeToString($query[0]);
+      return $query;
     };
 
     /**
@@ -162,46 +252,17 @@
       this.ref = ref;
     }
 
-    Ref.prototype.toXMLString = function() {
-      var $ref = $('<query>').attr('ref', this.ref);
-      return (new XMLSerializer()).serializeToString($ref[0]);
+    /**
+     * Creates a XML-Document representing this query
+     * @returns {XMLDoc} The XML-Document
+     */
+    Ref.prototype.toXML = function() {
+      return  $('<query>').attr('ref', this.ref);
     };
 
     return {
-      query: function(params) {
-        var $deferred = $.Deferred();
-        console.log(params);
-
-        $.ajax({
-          url: url + 'query',
-          contentType: 'text/xml', // datatype of data sent
-          crossDomain: true, // tell jQuery CORS is ok
-          data: params, // send plain xml data
-          dataType: 'xml', // expected datatype of the response
-          /*
-           * Since GET is 'a simplified request type' and would not support:
-           * - specifing a property descriptor,
-           * - specifing the first index or
-           * - specifing the number of returned elements in the resource list,
-           * this library supports only POST requests.
-           */
-          method: 'POST',
-          password: settings.password,
-          processData: false, // dont convert the xml data sent
-          username: settings.username
-        }).done(function(data){
-          $deferred.resolve($(data));
-        }).fail(function(xhr, status, error){
-          $deferred.reject(xhr, status, error);
-        });
-
-        return $deferred;
-      },
-      Query: function (opts) {
-        return new Query(opts);
-      },
-      Ref: function (ref) {
-        return new Ref(ref);
+      queries: function () {
+        return new Queries();
       }
     };
   };
