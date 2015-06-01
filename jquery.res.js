@@ -36,12 +36,11 @@
 
     /**
      * Adds a {@link $.res~Query} to this batch of queries
-     * @param {object} options See {@link $.res~Query}
      * @returns {$.res~Query} The {@link $.res~Query} that can be modified. Use
      * {@link $.res~Query#complete} to return the parent {@link $.res~Queries}
      */
-    Queries.prototype.addQuery = function(options) {
-      var q = new Query(options, this);
+    Queries.prototype.addQuery = function() {
+      var q = new Query(this);
       this.queries.push(q);
       return q;
     };
@@ -108,18 +107,13 @@
     /**
     * Describes a query that can be sent to a resserver
     *
-    * @param {object} options Options, contains start and/or count of a query
-    * (optional)
-    * ```javascript
-    * { start: null, count: null }
-    * ```
-    *
+    * @param {$.res~Queries} parent Parent {@link $.res~Queries}
     * @constructor
     */
-    function Query(options, parent) {
+    function Query(parent) {
       this._parent = parent || null;
-      this.start = options.start || null;
-      this.count = options.count || null;
+      this.start = null;
+      this.count = null;
       this.usercontext = [];
       this.controllercontext = [];
       this.props = [];
@@ -128,17 +122,41 @@
     /**
      * Return to the parent {@link $.res~Queries} object, i.e. in order to add
      * another {@link $.res~Query}.
-     * @returns {$.res~Queries} The Parent {@link $.res~Queries}
+     * @returns {$.res~Queries} The parent {@link $.res~Queries}
      */
     Query.prototype.complete = function() {
       return this._parent;
     };
 
     /**
+     * Specify the index of the first element in the matching resources list
+     * (index starting with 1). Default is 1.
+     * @param {int} start Index of the first element
+     * @return {$.res~Query} The active {@link $.res~Query}
+     */
+    Query.prototype.setStart = function(start) {
+      this.start = start;
+      return this;
+    };
+
+    /**
+     * Specify the requested number of matching resources. The special value of
+     * "all" indicates that all resources are requested. Default is 1.
+     * @param {int|string} count Number of requested resources
+     * @return {$.res~Query} The active {@link $.res~Query}
+     */
+    Query.prototype.setCount = function(count) {
+      this.count = count;
+      return this;
+    };
+
+
+    /**
      * Add a user preference
      *
      * @param {string} name  Property name as full URL or without namespace
      * @param {string} value Desired value for the property
+     * @return {$.res~Query} The active {@link $.res~Query}
      */
     Query.prototype.addUsercontext = function(name, value) {
       this.usercontext.push({
@@ -153,6 +171,7 @@
      *
      * @param {string} name  Property name as full URL or without namespace
      * @param {string} value Desired value for the property
+     * @return {$.res~Query} The active {@link $.res~Query}
      */
     Query.prototype.addControllercontext = function(name, value) {
       this.controllercontext.push({
@@ -166,21 +185,33 @@
      * Add a query property describing the desired resource
      * @param {string} name  Property name as full URL or without namespace
      * @param {string} value Desired value for the property
-     * @param {object} descs Descriptors describing this property (optional)
+     * @param {list}   descs Descriptors describing this property (optional)
      * ```javascript
      * [
      *   { name: "desc1", value: "dvalue1" },
      *   { name: "desc2", value: "dvalue2" }
      * ]
      * ```
+     * @return {$.res~Query} The active {@link $.res~Query}
      */
     Query.prototype.addProp = function(name, value, descs) {
-      this.props.push({
-        name: name,
-        value: value,
-        descs: descs || []
-      });
+      this.props.push(new Prop(this, name, value, descs));
       return this;
+    };
+
+    /**
+     * Add a query property describing the desired resource and switch to the
+     * property in order to add descriptors.
+     * @param {string} name  Property name as full URL or without namespace
+     * @param {string} value Desired value for the property
+     * @return {$.res~Prop} The active {@link $.res~Prop} in order to add
+     * descriptors. Return with {@link $.res~Prop#complete} to the parent
+     * {@link $.res~Query}.
+     */
+    Query.prototype.addPropWithDescs = function(name, value) {
+      var prop = new Prop(this, name, value);
+      this.props.push(prop);
+      return prop;
     };
 
     /**
@@ -223,22 +254,71 @@
       }
 
       // add all properties containing all descriptors
-      if (this.props.length > 0) {
-        for (var i = 0; i < this.props.length; i++) {
-          var $prop = $('<prop>')
-            .attr('name', this.props[i].name)
-            .attr('val', this.props[i].value);
-          for (var j = 0; j < this.props[i].descs.length; j++) {
-            var $desc = $('<descriptor>')
-              .attr('name', this.props[i].descs[j].name)
-              .attr('val', this.props[i].descs[j].value);
-            $prop.append($desc);
-          }
-          $query.append($prop);
-        }
+      for (var i = 0; i < this.props.length; i++) {
+        $query.append(this.props[i].toXML());
       }
 
       return $query;
+    };
+
+    /**
+     * A property of q {@link $.res~Query}.
+     * @param {$.res~Query} parent The parent {@link $.res~Query}
+     * @param {string} name   Name of the descriptor
+     * @param {string} value  Value of the descriptor
+     * @param {list} descs    List of descriptor objects (optional)
+     * ```javascript
+     * [
+     *   { name: "desc1", value: "dvalue1" },
+     *   { name: "desc2", value: "dvalue2" }
+     * ]
+     * ```
+     * @constructor
+     */
+    function Prop(parent, name, value, descs) {
+      this._parent = parent || null;
+      this.name = name || null;
+      this.value = value || null;
+      this.descs = descs || [];
+    }
+
+    /**
+     * Return to the parent {@link $.res~Query} object, i.e. in order to add
+     * another {@link $.res~Prop}.
+     * @returns {$.res~Query} The Parent {@link $.res~Query}
+     */
+    Prop.prototype.complete = function() {
+      return this._parent;
+    };
+
+    /**
+     * Add a descriptor to this property
+     * @param {string} name  Name of the descriptor
+     * @param {string} value Value of the descriptor
+     */
+    Prop.prototype.addDesc = function(name, value) {
+      this.descs.push({
+        name: name,
+        value: value
+      });
+      return this;
+    };
+
+    /**
+     * Creates a XML-Document representing this property
+     * @returns {XMLDoc} The XML-Document
+     */
+    Prop.prototype.toXML = function() {
+      var $prop = $('<prop>')
+        .attr('name', this.name)
+        .attr('val', this.value);
+      for (var i = 0; i < this.descs.length; i++) {
+        var $desc = $('<descriptor>')
+          .attr('name', this.descs[i].name)
+          .attr('val', this.descs[i].value);
+        $prop.append($desc);
+      }
+      return $prop;
     };
 
     /**
