@@ -53,6 +53,33 @@
             </ul>
         </li>
     
+        <li class="item" data-name="$.res~Prop">
+            <span class="title">
+                <a href="$.res-Prop.html">$.res~Prop</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="$.res~Prop#addDesc"><a href="$.res-Prop.html#addDesc">addDesc</a></li>
+            
+                <li data-name="$.res~Prop#complete"><a href="$.res-Prop.html#complete">complete</a></li>
+            
+                <li data-name="$.res~Prop#toXML"><a href="$.res-Prop.html#toXML">toXML</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
         <li class="item" data-name="$.res~Queries">
             <span class="title">
                 <a href="$.res-Queries.html">$.res~Queries</a>
@@ -101,9 +128,15 @@
             
                 <li data-name="$.res~Query#addProp"><a href="$.res-Query.html#addProp">addProp</a></li>
             
+                <li data-name="$.res~Query#addPropWithDescs"><a href="$.res-Query.html#addPropWithDescs">addPropWithDescs</a></li>
+            
                 <li data-name="$.res~Query#addUsercontext"><a href="$.res-Query.html#addUsercontext">addUsercontext</a></li>
             
                 <li data-name="$.res~Query#complete"><a href="$.res-Query.html#complete">complete</a></li>
+            
+                <li data-name="$.res~Query#setCount"><a href="$.res-Query.html#setCount">setCount</a></li>
+            
+                <li data-name="$.res~Query#setStart"><a href="$.res-Query.html#setStart">setStart</a></li>
             
                 <li data-name="$.res~Query#toXML"><a href="$.res-Query.html#toXML">toXML</a></li>
             
@@ -165,12 +198,12 @@
     <div class="nameContainer">
         <h4 class="name" id="Query">
             
-            new Query<span class="signature">(options)</span>
+            new Query<span class="signature">(parent)</span>
         </h4>
     
         
         <div class="tag-source">
-            c:/xampp/htdocs/res-api/jquery.res.js, line 119
+            jquery.res.js, line 113
         </div>
         
     </div>
@@ -212,13 +245,13 @@
 	
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>parent</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="$.res-Queries.html">$.res~Queries</a></span>
 
 
             
@@ -228,9 +261,7 @@
             
             <td class="description last">
                 
-                <p>Options, contains start and/or count of a query
-(optional)</p>
-<pre class="prettyprint source lang-javascript"><code>{ start: null, count: null }</code></pre></td>
+                <p>Parent <a href="$.res-Queries.html">$.res~Queries</a></p></td>
         </tr>
 	
 	
@@ -301,12 +332,12 @@
     <div class="nameContainer">
         <h4 class="name" id="addControllercontext">
             
-            addControllercontext<span class="signature">(name, value)</span>
+            addControllercontext<span class="signature">(name, value)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.res-Query.html">$.res~Query</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            c:/xampp/htdocs/res-api/jquery.res.js, line 157
+            jquery.res.js, line 176
         </div>
         
     </div>
@@ -432,6 +463,15 @@
     
     
     
+
+
+<h5>Returns:</h5>
+active <a href="$.res-Query.html">$.res~Query</a>
+<br />
+
+    
+    
+    
 </dd>
 
         
@@ -440,12 +480,12 @@
     <div class="nameContainer">
         <h4 class="name" id="addProp">
             
-            addProp<span class="signature">(name, value, descs)</span>
+            addProp<span class="signature">(name, value, descs)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.res-Query.html">$.res~Query</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            c:/xampp/htdocs/res-api/jquery.res.js, line 177
+            jquery.res.js, line 197
         </div>
         
     </div>
@@ -539,7 +579,7 @@
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">list</span>
 
 
             
@@ -598,6 +638,166 @@
     
     
     
+
+
+<h5>Returns:</h5>
+active <a href="$.res-Query.html">$.res~Query</a>
+<br />
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="addPropWithDescs">
+            
+            addPropWithDescs<span class="signature">(name, value)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.res-Prop.html">$.res~Prop</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            jquery.res.js, line 211
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Add a query property describing the desired resource and switch to the
+property in order to add descriptors.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>Property name as full URL or without namespace</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>Desired value for the property</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+<h5>Returns:</h5>
+active <a href="$.res-Prop.html">$.res~Prop</a> in order to add
+descriptors. Return with <a href="$.res-Prop.html#complete">$.res~Prop#complete</a> to the parent
+<a href="$.res-Query.html">$.res~Query</a>.
+<br />
+
+    
+    
+    
 </dd>
 
         
@@ -606,12 +806,12 @@
     <div class="nameContainer">
         <h4 class="name" id="addUsercontext">
             
-            addUsercontext<span class="signature">(name, value)</span>
+            addUsercontext<span class="signature">(name, value)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.res-Query.html">$.res~Query</a>}</span>
         </h4>
     
         
         <div class="tag-source">
-            c:/xampp/htdocs/res-api/jquery.res.js, line 143
+            jquery.res.js, line 161
         </div>
         
     </div>
@@ -737,6 +937,15 @@
     
     
     
+
+
+<h5>Returns:</h5>
+active <a href="$.res-Query.html">$.res~Query</a>
+<br />
+
+    
+    
+    
 </dd>
 
         
@@ -750,7 +959,7 @@
     
         
         <div class="tag-source">
-            c:/xampp/htdocs/res-api/jquery.res.js, line 133
+            jquery.res.js, line 127
         </div>
         
     </div>
@@ -812,7 +1021,262 @@ another <a href="$.res-Query.html">$.res~Query</a>.</p>
 
 
 <h5>Returns:</h5>
-Parent <a href="$.res-Queries.html">$.res~Queries</a>
+parent <a href="$.res-Queries.html">$.res~Queries</a>
+<br />
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="setCount">
+            
+            setCount<span class="signature">(count)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.res-Query.html">$.res~Query</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            jquery.res.js, line 148
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Specify the requested number of matching resources. The special value of
+&quot;all&quot; indicates that all resources are requested. Default is 1.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>count</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>Number of requested resources</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+<h5>Returns:</h5>
+active <a href="$.res-Query.html">$.res~Query</a>
+<br />
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="setStart">
+            
+            setStart<span class="signature">(start)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="$.res-Query.html">$.res~Query</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            jquery.res.js, line 137
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Specify the index of the first element in the matching resources list
+(index starting with 1). Default is 1.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>start</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>Index of the first element</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+
+
+<h5>Returns:</h5>
+active <a href="$.res-Query.html">$.res~Query</a>
 <br />
 
     
@@ -831,7 +1295,7 @@ Parent <a href="$.res-Queries.html">$.res~Queries</a>
     
         
         <div class="tag-source">
-            c:/xampp/htdocs/res-api/jquery.res.js, line 190
+            jquery.res.js, line 221
         </div>
         
     </div>
@@ -917,7 +1381,7 @@ XML-Document
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Thu May 28 2015 14:13:31 GMT+0200 (Mitteleuropäische Sommerzeit)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0</a> on Mon Jun 01 2015 16:44:08 GMT+0200 (Mitteleuropäische Sommerzeit)
         </footer>
     </div>
 </div>
