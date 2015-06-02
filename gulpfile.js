@@ -19,7 +19,6 @@ gulp.task('replace', ['default'], function() {
   var find = path.join(__dirname + '/');
   find = find.replace('/c/', 'c:');
   find = find.replace(/\\/g, '/');
-  console.log(find);
   return gulp.src(['docs/*.html'])
     .pipe(replace(find, ''))
     .pipe(gulp.dest('docs/'));

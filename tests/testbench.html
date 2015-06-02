@@ -13,7 +13,8 @@
     var $res = $.res('https://res.openurc.org/');
     $res.queries()
         .addQuery()
-            .setStart(1)
+            .setStart('1')
+            .setCount('1')
             .addProp('http://openurc.org/ns/res#type', 'http://openurc.org/restypes#video')
             .addProp('http://openurc.org/ns/res#subtype', 'http://openurc.org/restypes#signLanguageVideo')
             .addProp('http://purl.org/dc/elements/1.1/title', 'GSG video explaining the account number input field (human Feldmann)')
@@ -26,13 +27,14 @@
                 .complete()
             .complete()
         .send()
-        .done(function(xml){
-            xml.find('response').each(function(){
-                console.log($(this).find('globalAt').first().text());
-            });
+        .done(function(responses){
+            console.log(responses);
+            console.log(responses.getVeryFirstGlobalAt());
             console.log('done');
         }).fail(function(xhr, status, error){
-            console.log(xhr, status, error);
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
         });
     </script>
 </body>

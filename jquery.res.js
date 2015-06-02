@@ -1,5 +1,4 @@
 /* global jQuery, console */
-/*jshint -W004 */
 
 (function($) {
   'use strict';
@@ -47,7 +46,7 @@
 
     /**
      * Adds a {@link $.res~Ref} to this batch of queries
-     * @param {object} options See {@link $.res~Ref}
+     * @param {string} ref See {@link $.res~Ref}
      * @returns {$.res~Queries} Returns this {@link $.res~Queries}
      */
     Queries.prototype.addRef = function(ref) {
@@ -96,7 +95,7 @@
         processData: false, // dont convert the xml data sent
         username: settings.username
       }).done(function(data){
-        $deferred.resolve($(data));
+        $deferred.resolve(new Responses($(data)));
       }).fail(function(xhr, status, error){
         $deferred.reject(xhr, status, error);
       });
@@ -231,31 +230,30 @@
 
       // add all usercontext properties
       if (this.usercontext.length > 0) {
-        var $ctx = $('<usercontext></usercontext>');
+        var $uctx = $('<usercontext></usercontext>');
         for (var i = 0; i < this.usercontext.length; i++) {
           var $prop = $('<prop>')
             .attr('name', this.usercontext[i].name)
             .attr('val', this.usercontext[i].value);
-          $ctx.append($prop);
+          $uctx.append($prop);
         }
-        $query.append($ctx);
+        $query.append($uctx);
       }
 
       // add all controllercontext properties
       if (this.controllercontext.length > 0) {
-        var $ctx = $('<controllercontext></controllercontext>');
-        for (var i = 0; i < this.controllercontext.length; i++) {
-          var $prop = $('<prop>')
-            .attr('name', this.controllercontext[i].name)
-            .attr('val', this.controllercontext[i].value);
-          $ctx.append($prop);
+        var $cctx = $('<controllercontext></controllercontext>');
+        for (var j = 0; j < this.controllercontext.length; j++) {
+          $cctx.append($('<prop>')
+            .attr('name', this.controllercontext[j].name)
+            .attr('val', this.controllercontext[j].value));
         }
-        $query.append($ctx);
+        $query.append($cctx);
       }
 
       // add all properties containing all descriptors
-      for (var i = 0; i < this.props.length; i++) {
-        $query.append(this.props[i].toXML());
+      for (var k = 0; k < this.props.length; k++) {
+        $query.append(this.props[k].toXML());
       }
 
       return $query;
@@ -273,6 +271,10 @@
      *   { name: "desc2", value: "dvalue2" }
      * ]
      * ```
+     * @property {string} name Name of this property
+     * @property {string} value Value of this property
+     * @property {list} descs List of all descriptors of this property, a
+     * descriptor has the form `{ name: "desc1", value: "dvalue1" }`
      * @constructor
      */
     function Prop(parent, name, value, descs) {
@@ -337,7 +339,197 @@
      * @returns {XMLDoc} The XML-Document
      */
     Ref.prototype.toXML = function() {
-      return  $('<query>').attr('ref', this.ref);
+      return $('<query>').attr('ref', this.ref);
+    };
+
+    /**
+     * Represents all responses received from the resserver
+     * @param {XMLDocument} $xml The XMLDocument received from the resserver
+     * @property {list} responses List of {@link $.res~Response}s
+     * @constructor
+     */
+    function Responses($xml) {
+      this._nextIndex = 0;
+      this.responses = [];
+      var that = this;
+      $xml.find('response').each(function(idx, response){
+        that.responses.push(new Response($(response)));
+      });
+    }
+
+    /**
+     * Returns the number of responses received from the resserver
+     * @return {int} The number of responses
+     */
+    Responses.prototype.numberOfResponses = function() {
+      return this.responses.length;
+    };
+
+    /**
+     * Return the first response from the server
+     * @return {$.res~Response} The first response
+     */
+    Responses.prototype.firstResponse = function() {
+      return this.responses[0];
+    };
+
+    /**
+     * Checks if there are more responses received from the resserver
+     * @return {Boolean} True, if there are more responses
+     */
+    Responses.prototype.hasNextResponse = function() {
+      return this._nextIndex < this.responses.length;
+    };
+
+    /**
+     * Returns the next response, beginning at the first one. Check if there are
+     * responses left via {@link $.res~Responses#hasNext}
+     * @return {$.res~Response} The next response
+     */
+    Responses.prototype.nextResponse = function() {
+      return this.responses[this._nextIndex++];
+    };
+
+    /**
+     * Reset the {@link $.res~Responses#next} function
+     * @return {$.res~Responses} Return this Responses element (for chaining)
+     */
+    Responses.prototype.resetResponse = function() {
+      this._nextIndex = 0;
+      return this;
+    };
+
+    /**
+     * Shortcut to get the first global URI of the first resource of the first
+     * response
+     * @return {string|null} The very first global URI in these responses. Null if
+     * there are no global URIs available (e.g. reference expired)
+     */
+    Responses.prototype.getVeryFirstGlobalAt = function() {
+      return this.firstResponse().firstResource().getFirstGlobalAt();
+    };
+
+    /**
+     * Represents a single response received from the resserver
+     * @param {XMLDocument} $xml The subtree of the XMLDocument received from
+     * the resserver that represents this single response
+     * @property {string|null} ref The reference key for further equal queries
+     * @property {Boolean} expired When a ref was queried, if this ref expired
+     * @property {int|null} start Index of the first resource contained in this
+     * response
+     * @property {int|null} count Number of resources contained in this response
+     * @property {int|null} total Number of total matching resources available
+     * on the resserver
+     * @property {list} resources List of all {@link $.res~Resource}s contained
+     * in this Response
+     * @constructor
+     */
+    function Response($xml) {
+      this._nextIndex = 0;
+      this.ref = $xml.attr('ref') || null;
+      this.expired = $xml.attr('expired') === 'true';
+      this.start = $xml.attr('start') === undefined ?
+        null : parseInt($xml.attr('start'));
+      this.count = $xml.attr('count') === undefined ?
+        null : parseInt($xml.attr('count'));
+      // Server responds with "number" instead of specified "total"
+      this.total = $xml.attr('count') === undefined ?
+        null : parseInt($xml.attr('count'));
+      this.resources = [];
+      var that = this;
+
+      $xml.find('resource').each(function(idx, resource){
+        that.resources.push(new Resource($(resource)));
+      });
+    }
+
+    Response.prototype.hasRef = function() {
+      return this.ref !== null;
+    };
+
+    Response.prototype.hasMoreOnServer = function() {
+      return undefined;
+    };
+
+    /**
+     * Returns the number of resources in this response
+     * @return {int} The number of resources
+     */
+    Response.prototype.numberOfResources = function() {
+      return this.resources.length;
+    };
+
+    /**
+     * Return the first resource in this response
+     * @return {$.res~Resource} The first resource
+     */
+    Response.prototype.firstResource = function() {
+      return this.resources[0];
+    };
+
+    /**
+     * Checks if there are more resorces in this response
+     * @return {Boolean} True, if there are more resorces
+     */
+    Response.prototype.hasNextResource = function() {
+      return this._nextIndex < this.resources.length;
+    };
+
+    /**
+     * Returns the next resource, beginning at the first one. Check if there are
+     * resources left via {@link $.res~Response#hasNext}
+     * @return {$.res~Resource} The next resource
+     */
+    Response.prototype.nextResource = function() {
+      return this.resources[this._nextIndex++];
+    };
+
+    /**
+     * Reset the {@link $.res~Respone#next} function
+     * @return {$.res~Respone} Return this Respone element (for chaining)
+     */
+    Response.prototype.resetResource = function() {
+      this._nextIndex = 0;
+      return this;
+    };
+
+    /**
+     * Represents a single resource received from the resserver
+     * @param {XMLDocument} $xml The subtree of the XMLDocument received from
+     * the resserver that represents this single resource
+     * @property {string} about Specifying a resource's globally unique
+     * identifier
+     * @property {list} globalAts List of all global download URIs
+     * @property {list} props List of all {@link $.res~Prop}s that describe this
+     * resource
+     * @constructor
+     */
+    function Resource($xml) {
+      this.about = $xml.attr('about');
+      this.globalAts = [];
+      this.props = [];
+      var that = this;
+
+      $xml.find('globalAt').each(function(idx, globalAt){
+        that.globalAts.push($(globalAt).text());
+      });
+
+      $xml.find('prop').each(function(idx, prop){
+        var newProp = new Prop(null, $(prop).attr('name'), $(prop).attr('val'));
+        $(prop).find('descriptor').each(function(idx, descriptor){
+          newProp.addDesc($(descriptor).attr('name'), $(descriptor).attr('val'));
+        });
+        that.props.push(newProp);
+      });
+    }
+
+    /**
+     * Get the first global URI for this resource
+     * @return {string|null} The first global URI for this Resource. Null if
+     * there are no global URIs available (e.g. reference expired)
+     */
+    Resource.prototype.getFirstGlobalAt = function() {
+      return this.globalAts.length > 0 ? this.globalAts[0] : null;
     };
 
     return {
