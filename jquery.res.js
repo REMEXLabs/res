@@ -47,10 +47,12 @@
     /**
      * Adds a {@link $.res~Ref} to this batch of queries
      * @param {string} ref See {@link $.res~Ref}
+     * @param {int} start See {@link $.res~Ref}
+     * @param {int} count See {@link $.res~Ref}
      * @returns {$.res~Queries} Returns this {@link $.res~Queries}
      */
-    Queries.prototype.addRef = function(ref) {
-      this.queries.push(new Ref(ref));
+    Queries.prototype.addRef = function(ref, start, count) {
+      this.queries.push(new Ref(ref, start, count));
       return this;
     };
 
@@ -100,7 +102,7 @@
         $deferred.reject(xhr, status, error);
       });
 
-      return $deferred;
+      return $deferred.promise();
     };
 
     /**
@@ -327,11 +329,15 @@
      * A Query that is a reference to an earlier query
      * @param {string} ref Query reference identifier that had been assigned by
      * the server in a previous response
+     * @param {int} start Start index
+     * @param {int} count Number of requested resources
      *
      * @constructor
      */
-    function Ref(ref) {
+    function Ref(ref, start, count) {
       this.ref = ref;
+      this.start = start || undefined;
+      this.count = count || undefined;
     }
 
     /**
@@ -339,7 +345,9 @@
      * @returns {XMLDoc} The XML-Document
      */
     Ref.prototype.toXML = function() {
-      return $('<query>').attr('ref', this.ref);
+      return $('<query>').attr('ref', this.ref)
+        .attr('start', this.start)
+        .attr('count', this.count);
     };
 
     /**
@@ -432,8 +440,7 @@
         null : parseInt($xml.attr('start'));
       this.count = $xml.attr('count') === undefined ?
         null : parseInt($xml.attr('count'));
-      // Server responds with "number" instead of specified "total"
-      this.total = $xml.attr('count') === undefined ?
+      this.total = $xml.attr('total') === undefined ?
         null : parseInt($xml.attr('count'));
       this.resources = [];
       var that = this;
