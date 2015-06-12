@@ -7,6 +7,7 @@
     <script src="../jquery.res.js"></script>
 </head>
 <body>
+    <form action=""><input type="file"></form>
     <script>
     /* global $, console */
     'use strict';
@@ -31,12 +32,40 @@
         .done(function(responses){
             console.log(responses);
             console.log(responses.getVeryFirstGlobalAt());
-            console.log('done');
-        }).fail(function(xhr, status, error){
-            console.log(xhr);
-            console.log(status);
-            console.log(error);
+        }).fail(function(response){
+            console.log(response.error);
+            console.log(response.status);
         });
+    function asdf() {
+        return $res.upload()
+            .addResource()
+                .setName('asdf')
+                .setInherit(true)
+                .setFileInput($('input'))
+                .addProp('http://openurc.org/ns/res#type', 'http://openurc.org/restypes#pictogram')
+                .addProp('http://openurc.org/ns/res#pictogramSet', 'Wahlpiktogramme')
+                .addPropWithDescs('http://purl.org/dc/elements/1.1/title', 'Log')
+                    .addDesc('lang', 'en')
+                    .complete()
+                .complete()
+        .addResource()
+                .setName('asdf')
+                .setInherit(true)
+                .setFileInput($('input'))
+                .addProp('http://openurc.org/ns/res#type', 'http://openurc.org/restypes#pictogram')
+                .addProp('http://openurc.org/ns/res#pictogramSet', 'Wahlpiktogramme')
+                .addPropWithDescs('http://purl.org/dc/elements/1.1/title', 'Log')
+                    .addDesc('lang', 'en')
+                    .complete()
+                .complete()
+        .send()
+        .done(function(responses){
+            console.log(responses);
+        }).fail(function(response){
+            console.log(response.error);
+            console.log(response.status);
+        });
+    }
     </script>
 </body>
 </html>
