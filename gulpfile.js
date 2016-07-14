@@ -7,7 +7,7 @@ var replace = require('gulp-replace');
 
 gulp.task('basics', function() {
   return gulp.src('jquery.res.js')
-    .pipe(uglify())
+    .pipe(uglify({preserveComments:'license'}))
     .pipe(rename({ extname: '.min.js' }))
     .pipe(gulp.dest('./'))
     .pipe(run(

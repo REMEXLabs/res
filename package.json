@@ -15,7 +15,7 @@
     "openurc"
   ],
   "author": "Alexander von Bernuth",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "jquery": "^2.1.4"
   },
@@ -24,7 +24,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.3",
     "gulp-run": "^1.6.8",
-    "gulp-uglify": "^1.2.0",
+    "gulp-uglify": "^1.5.4",
     "jaguarjs-jsdoc": "0.0.1",
     "jsdoc": "^3.3.0"
   },
