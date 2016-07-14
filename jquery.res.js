@@ -613,7 +613,10 @@
         method: 'POST',
         password: settings.password,
         processData: false, // dont convert the xml data sent
-        username: settings.username
+        username: settings.username,
+        xhrFields: {
+          withCredentials: true
+        },
       }).done(function(data){
         var responses = [];
         $(data).find('resource').each(function() {
@@ -773,6 +776,7 @@
      * @param  {XMLDoc} $xml The jQuery-XMLDocument
      * @return {String}      The String representation of the given
      * jQuery-XMLDocument
+     * @private
      */
     function _serializeXML($xml) {
       var xmlString = (new XMLSerializer()).serializeToString($xml[0]);

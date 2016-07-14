@@ -37,7 +37,11 @@
             console.log(response.status);
         });
     function asdf() {
-        return $res.upload()
+        return $.res('https://res.openurc.org:9443/', {
+            username: 'asdf',
+            password: 'asdf'
+        })
+        .upload()
             .addResource()
                 .setName('asdf')
                 .setInherit(true)
@@ -48,7 +52,7 @@
                     .addDesc('lang', 'en')
                     .complete()
                 .complete()
-        .addResource()
+            .addResource()
                 .setName('asdf')
                 .setInherit(true)
                 .setFileInput($('input'))
