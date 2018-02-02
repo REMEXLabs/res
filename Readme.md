@@ -64,7 +64,7 @@ For a complete reference see `docs/index.html`.
 
 Copyright 2016 Hochschule der Medien (HdM) / Stuttgart Media University
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the [Apache License, Version 2.0](https://github.com/REMEXLabs/res/blob/master/LICENSE) (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
